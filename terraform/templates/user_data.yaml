@@ -1,0 +1,23 @@
+#cloud-config
+users:
+  - name: ${username}
+    passwd: ${password_hash}
+    shell: /bin/bash
+    lock_passwd: False
+    ssh_pwauth: False
+    chpasswd: { expire: False }
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: user,sudo
+    ssh_authorized_keys:
+      - ${ssh_pub_key}
+keyboard:
+  layout: de
+package_update: true
+package_upgrade: true
+ansible:
+  run_user: "root"
+  package_name: ansible-core
+  install_method: distro
+  galaxy:
+    - role:
+      - install: ["wesmarcum.openssh"]

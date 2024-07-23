@@ -1,0 +1,18 @@
+network:
+  version: 2
+  ethernets:
+    ens3:
+      dhcp4: no
+      addresses: 
+        - ${ext_ip_addr}/${ext_ip_netmask}
+      nameservers:
+           addresses:
+             - ${ext_ip_gateway}
+      routes:
+      - to: 0.0.0.0/0
+        via: ${ext_ip_gateway}
+    ens4:
+      dhcp4: no
+      addresses: 
+        - ${int_ip_addr}/${int_ip_netmask}
+
