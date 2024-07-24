@@ -12,12 +12,15 @@ users:
       - ${ssh_pub_key}
 keyboard:
   layout: de
-package_update: true
-package_upgrade: true
+    #package_update: true
+    #package_upgrade: true
 ansible:
-  run_user: "root"
   package_name: ansible-core
   install_method: distro
   galaxy:
-    - role:
-      - install: ["wesmarcum.openssh"]
+    actions:
+      - [ansible-galaxy,role,install,wesmarcum.openssh]
+  pull:
+    url: https://github.com/dollervar/sf-tech-challenge.git
+    playbook_name: ansible/sf-vm-playbook.yaml
+    connection: local
