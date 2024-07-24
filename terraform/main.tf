@@ -28,6 +28,13 @@ resource "libvirt_volume" "ubuntu-vm-base" {
   format = "qcow2"
 }
 
+resource "libvirt_volume" "ubuntu-vm" {
+  name   = "ubuntu-vm"
+  size	 = 1024 * 1024 * 1024 *10
+  base_volume_id = libvirt_volume.ubuntu-vm-base.id
+  pool   = libvirt_pool.ubuntu-terraform.name
+}
+
 resource "libvirt_cloudinit_disk" "commoninit" {
   name           = "commoninit.iso"
   user_data	 = templatefile("${path.module}/templates/user_data.yaml", {
@@ -46,6 +53,20 @@ resource "libvirt_cloudinit_disk" "commoninit" {
   pool           = libvirt_pool.ubuntu-terraform.name
 }
 ###############################################################################
+resource "libvirt_network" "external" {
+  name           = "sf-external"
+  mode           = "bridge"
+  bridge         = "virbr0"
+  autostart      = true
+}
+
+resource "libvirt_network" "internal" {
+  name           = "sf-internal"
+  mode           = "nat"
+  addresses	 = ["10.200.16.96/29"]
+  autostart      = true
+}
+###############################################################################
 # Create the machine
 resource "libvirt_domain" "ubuntuvm" {
   name   = "ubuntuvm"
@@ -55,7 +76,11 @@ resource "libvirt_domain" "ubuntuvm" {
   cloudinit = libvirt_cloudinit_disk.commoninit.id
 
   network_interface {
-    network_name = "default"
+    network_name = "sf-external"
+  }
+
+  network_interface {
+    network_name = "sf-internal"
   }
 
   console {
@@ -71,7 +96,7 @@ resource "libvirt_domain" "ubuntuvm" {
   }
  
   disk {
-    volume_id = libvirt_volume.ubuntu-vm-base.id
+    volume_id = libvirt_volume.ubuntu-vm.id
   }
 
   graphics {
