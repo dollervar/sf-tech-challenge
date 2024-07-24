@@ -1,0 +1,22 @@
+--- 
+- name: setup ubuntuvm
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks: 
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+    - name: start nginx
+      service: 
+        name: nginx
+        state: started
+        enabled: yes  
+  roles:
+    - role: wesmarcum.openssh
+      vars:
+        openssh_listen_address: ["192.168.122.146"]
+        openssh_allowed_users:
+          - toor
+
