@@ -3,20 +3,21 @@
   hosts: localhost 
   gather_facts: true
   become: true
-  tasks: 
-    - name: install nginx
-      apt:
-        name: nginx
-        state: latest
-    - name: start nginx
-      service: 
-        name: nginx
-        state: started
-        enabled: yes  
   roles:
     - role: wesmarcum.openssh
       vars:
-        openssh_listen_address: ["192.168.122.146"]
+        openssh_listen_address: ["192.168.178.146"]
         openssh_allowed_users:
           - toor
+    - role: geerlingguy.nginx
+      vars:
+        nginx_listen_ipv6: false
+        nginx_vhosts:
+          - listen: "192.168.178.146:80"
+            server_name: "sf.net"
+            root: "/var/www/sf.net"
+            index: "index.html"
+            state: present
+            filename: "sf.net.conf"
+
 
