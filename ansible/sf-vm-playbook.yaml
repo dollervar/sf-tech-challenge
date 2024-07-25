@@ -7,16 +7,18 @@
     - role: wesmarcum.openssh
       vars:
         openssh_listen_address: ["192.168.178.146"]
+        openssh_addess_family: "ipv4"
         openssh_allowed_users:
           - toor
     - role: geerlingguy.nginx
       vars:
         nginx_listen_ipv6: false
+        nginx_remove_default_vhost: true
         nginx_vhosts:
           - listen: "192.168.178.146:80"
             server_name: "sf.net"
-            root: "/var/www/sf.net"
-            index: "index.html"
+            root: "/var/www/html"
+            index: "index.nginx-debian.html"
             state: present
             filename: "sf.net.conf"
 
