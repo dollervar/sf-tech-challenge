@@ -21,5 +21,53 @@
             index: "index.nginx-debian.html"
             state: present
             filename: "sf.net.conf"
+  tasks:
+    - name: Allow localhost
+      ansible.builtin.iptables:
+        chain: INPUT
+        in_interface: "lo"
+        jump: ACCEPT
+    - name: Allow localhost
+      ansible.builtin.iptables:
+        chain: INPUT
+        in_interface: "!lo"
+        source: "127.0.0.0/8"
+        jump: REJECT
+    - name: Allow established connections
+      ansible.builtin.iptables:
+        chain: INPUT
+        ctstate: ESTABLISHED,RELATED
+        jump: ACCEPT
+    - name: Allow incomming SSH connecitons
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 22
+        ctstate: NEW
+        syn: match
+        jump: ACCEPT
+    - name: Set default policy for egress
+      ansible.builtin.iptables:
+        chain: INPUT
+        policy: DROP
+    - name: Allow https
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_ports:
+          - "80"
+          - "443"
+        jump: ACCEPT
+    - name: Allow connetions from Device
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 9000
+        source: "10.200.16.100/29"
+        jump: ACCEPT
+
+
+
+
 
 
