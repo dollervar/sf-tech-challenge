@@ -16,10 +16,11 @@ Network:
 I choose the range 192.168.178.0/24 as the public network. The vm will have direct access to the physical network. Th vm also uses this network to connect to the internet.
 You will need t change the ext network variables in varibles.tf as well as in the ansible playbook.
 
-1. Add a bridge to access internal  network
+1. Add a bridge to access internal network
+   
 ip link add sfbr0 type bridge
 
-2. Add a bridge to access exernal network
+3. Add a bridge to access exernal network
    
 ip link add sfextbr0 type bridge
 
