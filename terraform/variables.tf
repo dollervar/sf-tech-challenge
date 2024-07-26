@@ -20,7 +20,8 @@ variable "user_ssh_pub_key" {
 
 variable "ext_ip_addr" {
   type	  = any
-  default = "192.168.122.146"
+#  default = "192.168.122.146"
+  default = "192.168.178.146"
 }
 
 variable "ext_ip_netmask" {
@@ -30,7 +31,7 @@ variable "ext_ip_netmask" {
 
 variable "ext_ip_gateway" {
   type	  = any
-  default = "192.168.122.1"
+  default = "192.168.178.1"
 }
 
 variable "int_ip_addr" {

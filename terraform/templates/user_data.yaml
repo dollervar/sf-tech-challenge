@@ -12,14 +12,18 @@ users:
       - ${ssh_pub_key}
 keyboard:
   layout: de
-    #package_update: true
+package_update: true
+packages:
+  - qemu-system-agent
     #package_upgrade: true
+    #package_reboot_if_required: true
 ansible:
   package_name: ansible-core
   install_method: distro
   galaxy:
     actions:
       - [ansible-galaxy,role,install,wesmarcum.openssh]
+      - [ansible-galaxy,role,install,geerlingguy.nginx]
   pull:
     url: https://github.com/dollervar/sf-tech-challenge.git
     playbook_name: ansible/sf-vm-playbook.yaml

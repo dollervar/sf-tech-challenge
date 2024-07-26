@@ -43,40 +43,37 @@ resource "libvirt_cloudinit_disk" "commoninit" {
 			password_hash	= var.user_password_hash
                         ssh_pub_key 	= var.user_ssh_pub_key
 			})
-  network_config= templatefile("${path.module}/templates/network_config.yaml", {
+  network_config = templatefile("${path.module}/templates/network_config.yaml", {
 			ext_ip_addr	= var.ext_ip_addr
 			ext_ip_netmask	= var.ext_ip_netmask
 			ext_ip_gateway	= var.ext_ip_gateway
 			int_ip_addr	= var.int_ip_addr
 			int_ip_netmask	= var.int_ip_netmask
 			})
+  meta_data	 = templatefile("${path.module}/templates/meta_data.yaml", {
+			hostname	= var.hostname
+			})
   pool           = libvirt_pool.ubuntu-terraform.name
 }
 ###############################################################################
-resource "libvirt_network" "external" {
-  name           = "sf-external"
-  mode           = "bridge"
-  bridge         = "virbr0"
-  autostart      = true
-}
 
 resource "libvirt_network" "internal" {
   name           = "sf-internal"
-  mode           = "nat"
-  addresses	 = ["10.200.16.96/29"]
+  mode           = "bridge"
+  bridge         = "sfbr0"
   autostart      = true
 }
+
 ###############################################################################
 # Create the machine
 resource "libvirt_domain" "ubuntuvm" {
   name   = "ubuntuvm"
   memory = "512"
   vcpu   = 1
-
   cloudinit = libvirt_cloudinit_disk.commoninit.id
 
   network_interface {
-    network_name = "sf-external"
+    bridge 	 = "sfextbr0"
   }
 
   network_interface {
