@@ -32,8 +32,16 @@ ip link set <IF_NAME> up
 Set default route to next hop
 ip route add default via 192.168.178.1
 
+SSH:
+Generate a ssh-key pair with ssh-keygen -t ecdsa
+Add the pub key to variables.tf
+
 RUN
 terraform apply
+
+
+There is one user configured named "toor" with the password "toor"
+
 
 
 
