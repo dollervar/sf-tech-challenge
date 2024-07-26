@@ -16,24 +16,30 @@ Network:
 I choose the range 192.168.178.0/24 as the public network. The vm will have direct access to the physical network. Th vm also uses this network to connect to the internet.
 You will need t change the ext network variables in varibles.tf as well as in the ansible playbook.
 
-Add a bridge to access internal  network
+1. Add a bridge to access internal  network
 ip link add sfbr0 type bridge
 
-Add a bridge to access exernal network
+2. Add a bridge to access exernal network
+   
 ip link add sfextbr0 type bridge
 
-Add the physical NIC to the external bridge
+4. Add the physical NIC to the external bridge
+   
 ip link set <IF_NAME> master sfextbr0
 
-Set address for the bridge interface
+5. Set address for the bridge interface
+
 ip address add dev sfextbr0 192.168.178.190/24
+
 ip link set <IF_NAME> up
 
-Set default route to next hop
+5. Set default route to next hop
+   
 ip route add default via 192.168.178.1
 
 SSH:
 Generate a ssh-key pair with ssh-keygen -t ecdsa
+
 Add the pub key to variables.tf
 
 RUN
